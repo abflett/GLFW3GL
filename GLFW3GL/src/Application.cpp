@@ -2,6 +2,47 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <sstream>
+
+struct ShaderProgramSource {
+    std::string VertexSource;
+    std::string FragmentSource;
+};
+
+static ShaderProgramSource ParseShader(const std::string& filepath)
+{
+    std::ifstream stream(filepath);
+
+    enum class ShaderType {
+        NONE = -1, VERTEX = 0, FRAGMENT = 1
+    };
+
+    std::string line;
+    std::stringstream ss[2];
+    ShaderType type = ShaderType::NONE;
+    while (getline(stream, line))
+    {
+        if (line.find("#shader") != std::string::npos)
+        {
+            if (line.find("vertex") != std::string::npos)
+            {
+                type = ShaderType::VERTEX;
+            }
+            else
+            {
+                type = ShaderType::FRAGMENT;
+            }
+        }
+        else
+        {
+            ss[(int)type] << line << "\n";
+        }
+    }
+
+    return { ss[0].str(), ss[1].str() };
+}
 
 static GLuint CompileShader(GLuint type, const std::string& source)
 {
@@ -74,10 +115,16 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << "\n";
     
-    GLfloat positions[6] = {
+    GLfloat positions[] = {
         -0.5f, -0.5f,
-         0.0f,  0.5f,
-         0.5f, -0.5f
+         0.5f, -0.5f,
+         0.5f,  0.5f,
+        -0.5f,  0.5f
+    };
+
+    GLuint indices[] = {
+        0, 1, 2,
+        2, 3, 0
     };
 
     GLuint buffer;
@@ -88,27 +135,13 @@ int main(void)
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
     glEnableVertexAttribArray(0);
 
-    std::string vertexShader = R"(
-        #version 330 core
-        layout (location = 0) in vec4 position;
+    GLuint ibo;
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-        void main()
-        {
-            gl_Position = position;
-        }
-    )";
-
-    std::string fragmentShader = R"(
-        #version 330 core
-        layout (location = 0) out vec4 color;
-
-        void main()
-        {
-            color = vec4(0.0, 1.0, 0.0, 1.0);
-        }
-    )";
-
-    GLuint shader = CreateShader(vertexShader, fragmentShader);
+    ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
+    GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
     glUseProgram(shader);
 
     /* Loop until the user closes the window */
@@ -116,7 +149,7 @@ int main(void)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, nullptr);
 
         glfwSwapBuffers(window);
 
