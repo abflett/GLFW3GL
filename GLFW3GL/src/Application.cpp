@@ -110,6 +110,7 @@ int main(void)
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 
 
 	if (glewInit() != GLEW_OK)
@@ -137,9 +138,13 @@ int main(void)
 		2, 3, 0
 	};
 
-	GLuint buffer;
-	glGenBuffers(1, &buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
+	GLuint vao;
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
@@ -150,22 +155,42 @@ int main(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+	glBindVertexArray(0);
+
 	std::string vertexShaderSource = ReadFile("res/shaders/Basic.vert");
 	std::string fragmentShaderSource = ReadFile("res/shaders/Basic.frag");
 
 	GLuint shader = CreateShader(vertexShaderSource, fragmentShaderSource);
 	glUseProgram(shader);
 
+	int uniformLocation = glGetUniformLocation(shader, "u_color");
+	glUniform4f(uniformLocation, 0.2f, 0.3f, 0.8f, 1.0f);
+
+	GLfloat red = 0.00f;
+	GLfloat interval = 0.001f;
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
+		glBindVertexArray(vao);
+
+		if (red > 1.0f || red < 0.0f)
+		{
+			interval *= -1;
+		}
+		red += interval;
+
+		glUniform4f(uniformLocation, red, 0.3f, 0.8f, 1.0f);
+
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, nullptr);
+		glBindVertexArray(0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	glDeleteBuffers(1, &buffer);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
+	glDeleteVertexArrays(1, &vao);
 	glDeleteProgram(shader);
 	glfwTerminate();
 	return 0;
