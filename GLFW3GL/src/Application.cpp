@@ -100,6 +100,9 @@ int main(void)
 		return -1;
 	}
 
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	window = glfwCreateWindow(800, 600, "GLFW3GL", NULL, NULL);
 	if (!window)
@@ -167,8 +170,8 @@ int main(void)
 	glUniform4f(uniformLocation, 0.2f, 0.3f, 0.8f, 1.0f);
 
 	GLfloat red = 0.00f;
-	GLfloat interval = 0.001f;
-	/* Loop until the user closes the window */
+	GLfloat r_increment = 0.001f;
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -176,10 +179,9 @@ int main(void)
 
 		if (red > 1.0f || red < 0.0f)
 		{
-			interval *= -1;
+			r_increment *= -1;
 		}
-		red += interval;
-
+		red += r_increment;
 		glUniform4f(uniformLocation, red, 0.3f, 0.8f, 1.0f);
 
 		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(indices[0]), GL_UNSIGNED_INT, nullptr);

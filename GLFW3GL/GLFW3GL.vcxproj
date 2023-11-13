@@ -71,19 +71,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\glm-0.9.9.8\glm;$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\glew-2.1.0\lib;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\lib-vc2022;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\glm-0.9.9.8\glm;$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\glew-2.1.0\lib;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\lib-vc2022;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\glm-0.9.9.8\glm;$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\glew-2.1.0\lib;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\lib-vc2022;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)Dependencies\glm-0.9.9.8\glm;$(SolutionDir)Dependencies\glew-2.1.0\include;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)Dependencies\glew-2.1.0\lib;$(SolutionDir)Dependencies\glfw-3.3.8.bin.WIN64\lib-vc2022;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
