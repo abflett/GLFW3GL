@@ -22,44 +22,23 @@ void GLAPIENTRY MessageCallback(GLenum source,
 	std::cerr << std::endl;
 }
 
-struct ShaderProgramSource
+std::string ReadFile(const std::string& filepath)
 {
-	std::string VertexSource;
-	std::string FragmentSource;
-};
-
-static ShaderProgramSource ParseShader(const std::string& filepath)
-{
-	std::ifstream stream(filepath);
-
-	enum class ShaderType
+	std::ifstream file(filepath);
+	if (!file.is_open())
 	{
-		NONE = -1, VERTEX = 0, FRAGMENT = 1
-	};
-
-	std::string line;
-	std::stringstream ss[2];
-	ShaderType type = ShaderType::NONE;
-	while (getline(stream, line))
-	{
-		if (line.find("#shader") != std::string::npos)
-		{
-			if (line.find("vertex") != std::string::npos)
-			{
-				type = ShaderType::VERTEX;
-			}
-			else
-			{
-				type = ShaderType::FRAGMENT;
-			}
-		}
-		else
-		{
-			ss[(int)type] << line << "\n";
-		}
+		std::cerr << "Error: Failed to open file " << filepath << std::endl;
+		return "";
 	}
 
-	return { ss[0].str(), ss[1].str() };
+	std::stringstream ss;
+	std::string line;
+	while (getline(file, line))
+	{
+		ss << line << '\n';
+	}
+
+	return ss.str();
 }
 
 static GLuint CompileShader(GLuint type, const std::string& source)
@@ -171,8 +150,10 @@ int main(void)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	ShaderProgramSource source = ParseShader("res/shaders/Basic.shader");
-	GLuint shader = CreateShader(source.VertexSource, source.FragmentSource);
+	std::string vertexShaderSource = ReadFile("res/shaders/Basic.vert");
+	std::string fragmentShaderSource = ReadFile("res/shaders/Basic.frag");
+
+	GLuint shader = CreateShader(vertexShaderSource, fragmentShaderSource);
 	glUseProgram(shader);
 
 	/* Loop until the user closes the window */
