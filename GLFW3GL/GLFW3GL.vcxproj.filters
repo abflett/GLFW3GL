@@ -22,5 +22,6 @@
   <ItemGroup>
     <None Include="res\shaders\Basic.vert" />
     <None Include="res\shaders\Basic.frag" />
+    <None Include="res\shaders\Water.frag" />
   </ItemGroup>
 </Project>
